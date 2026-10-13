@@ -32,66 +32,66 @@ app.get("/api/persons", (request, response) => {
 });
 
 // *************DETAIL***************
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = phoneBook.find((n) => {
-    return n.id === id;
-  });
-  return response.json(person);
-});
+// app.get("/api/persons/:id", (request, response) => {
+//   const id = request.params.id;
+//   const person = phoneBook.find((n) => {
+//     return n.id === id;
+//   });
+//   return response.json(person);
+// });
 
-const lastId = () => {
-  const maxId =
-    phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
-  return String(maxId + 1);
-};
+// const lastId = () => {
+//   const maxId =
+//     phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
+//   return String(maxId + 1);
+// };
 
-// console.log("the last id is", lastId());
+// // console.log("the last id is", lastId());
 
-// ************CREATE************
-app.post("/api/persons", (request, response) => {
-  const person = request.body;
+// // ************CREATE************
+// app.post("/api/persons", (request, response) => {
+//   const person = request.body;
 
-  if (!person.name) {
-    return response.status(400).json({ error: "Name field is required" });
-  }
+//   if (!person.name) {
+//     return response.status(400).json({ error: "Name field is required" });
+//   }
 
-  const contactInfo = {
-    name: person.name,
-    number: person.number || null,
-    id: lastId(),
-  };
+//   const contactInfo = {
+//     name: person.name,
+//     number: person.number || null,
+//     id: lastId(),
+//   };
 
-  phoneBook = phoneBook.concat(contactInfo);
-  response.json(contactInfo);
-  console.log("returned data", contactInfo);
-});
+//   phoneBook = phoneBook.concat(contactInfo);
+//   response.json(contactInfo);
+//   console.log("returned data", contactInfo);
+// });
 
-// ****************UPDATE******************
-app.put("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const body = request.body;
+// // ****************UPDATE******************
+// app.put("/api/persons/:id", (request, response) => {
+//   const id = request.params.id;
+//   const body = request.body;
 
-  const contact = phoneBook.find((n) => n.id === id);
+//   const contact = phoneBook.find((n) => n.id === id);
 
-  if (!contact)
-    return response.status(404).json({ error: "User does not exist" });
+//   if (!contact)
+//     return response.status(404).json({ error: "User does not exist" });
 
-  const updatedContact = { ...contact, ...body };
+//   const updatedContact = { ...contact, ...body };
 
-  const updatedPhoneBook = phoneBook.map((n) =>
-    n.id === id ? updatedContact : n,
-  );
+//   const updatedPhoneBook = phoneBook.map((n) =>
+//     n.id === id ? updatedContact : n,
+//   );
 
-  response.json(updatedContact);
-});
+//   response.json(updatedContact);
+// });
 
-// ***********DETAIL******************
-app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const contactInfo = phoneBook.filter((n) => n.id !== id);
-  response.status(200).end();
-});
+// // ***********DELETE******************
+// app.delete("/api/persons/:id", (request, response) => {
+//   const id = request.params.id;
+//   const contactInfo = phoneBook.filter((n) => n.id !== id);
+//   response.status(200).end();
+// });
 
 const PORT = 3001;
 
