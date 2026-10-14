@@ -105,11 +105,11 @@ const lastId = () => {
 // });
 
 // // ***********DELETE******************
-// app.delete("/api/persons/:id", (request, response) => {
-//   const id = request.params.id;
-//   const contactInfo = phoneBook.filter((n) => n.id !== id);
-//   response.status(200).end();
-// });
+app.delete("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const contactInfo = phoneBook.filter((n) => n.id !== id);
+  response.status(200).end();
+});
 
 const PORT = 3001;
 
