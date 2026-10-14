@@ -26,6 +26,11 @@ let phoneBook = [
     name: "Mary Poppendieck",
     number: "39-23-6423122",
   },
+  {
+    id: "5",
+    name: "mtn",
+    number: "310",
+  },
 ];
 
 // ***********LIST*************
@@ -82,8 +87,18 @@ const randomId = () => {
 app.post("/api/persons", (request, response) => {
   const person = request.body;
 
-  if (!person.name) {
-    return response.status(400).json({ error: "Name field is required" });
+  if (!person.name || !person.number) {
+    return response
+      .status(400)
+      .json({ error: "Name and number field is required" });
+  }
+
+  if (person) {
+    phoneBook.map((n) => {
+      const isUnique = n.name.toLowerCase() === person.name.toLowerCase();
+
+      if (isUnique) response.json({ error: "name must be unique" });
+    });
   }
 
   const contactInfo = {
