@@ -58,32 +58,45 @@ app.get("/api/persons/:id", (request, response) => {
   return response.json(person);
 });
 
-const lastId = () => {
-  const maxId =
-    phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
-  return String(maxId + 1);
+// const lastId = () => {
+//   const maxId =
+//     phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
+//   return String(maxId + 1);
+// };
+
+const randomId = () => {
+  const alphnum = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const len = 8;
+  let idVal = "";
+
+  for (let i = 0; i < len; i++) {
+    // console.log(i);
+    idVal += alphnum[Math.floor(Math.random() * alphnum.length)];
+  }
+  return idVal;
 };
 
 // console.log("the last id is", lastId());
 
 // // ************CREATE************
-// app.post("/api/persons", (request, response) => {
-//   const person = request.body;
+app.post("/api/persons", (request, response) => {
+  const person = request.body;
 
-//   if (!person.name) {
-//     return response.status(400).json({ error: "Name field is required" });
-//   }
+  if (!person.name) {
+    return response.status(400).json({ error: "Name field is required" });
+  }
 
-//   const contactInfo = {
-//     name: person.name,
-//     number: person.number || null,
-//     id: lastId(),
-//   };
+  const contactInfo = {
+    name: person.name,
+    number: person.number || null,
+    id: randomId(),
+    // id: lastId(),
+  };
 
-//   phoneBook = phoneBook.concat(contactInfo);
-//   response.json(contactInfo);
-//   console.log("returned data", contactInfo);
-// });
+  phoneBook = phoneBook.concat(contactInfo);
+  response.json(contactInfo);
+  console.log("returned data", contactInfo);
+});
 
 // // ****************UPDATE******************
 // app.put("/api/persons/:id", (request, response) => {
