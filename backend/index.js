@@ -51,6 +51,10 @@ app.get("/api/persons/:id", (request, response) => {
   const person = phoneBook.find((n) => {
     return n.id === id;
   });
+
+  if (!person) {
+    return response.status(400).json({ error: "invalid id" });
+  }
   return response.json(person);
 });
 
