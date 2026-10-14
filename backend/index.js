@@ -1,7 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 let phoneBook = [
   {
@@ -29,6 +31,18 @@ let phoneBook = [
 // ***********LIST*************
 app.get("/api/persons", (request, response) => {
   return response.json(phoneBook);
+});
+
+// **********INFO************
+app.get("/info", (request, response) => {
+  // return response.json(phoneBook);
+  const numberOfContact = phoneBook.length;
+  const date = new Date();
+
+  return response.send(`
+    <h2>Phone has info for ${numberOfContact} people</h2>
+    <p>${date}</p>
+    `);
 });
 
 // *************DETAIL***************
