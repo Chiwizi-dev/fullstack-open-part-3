@@ -79,24 +79,24 @@ const randomId = () => {
 // console.log("the last id is", lastId());
 
 // // ************CREATE************
-app.post("/api/persons", (request, response) => {
-  const person = request.body;
+// app.post("/api/persons", (request, response) => {
+//   const person = request.body;
 
-  if (!person.name) {
-    return response.status(400).json({ error: "Name field is required" });
-  }
+//   if (!person.name) {
+//     return response.status(400).json({ error: "Name field is required" });
+//   }
 
-  const contactInfo = {
-    name: person.name,
-    number: person.number || null,
-    id: randomId(),
-    // id: lastId(),
-  };
+//   const contactInfo = {
+//     name: person.name,
+//     number: person.number || null,
+//     id: randomId(),
+//     // id: lastId(),
+//   };
 
-  phoneBook = phoneBook.concat(contactInfo);
-  response.json(contactInfo);
-  console.log("returned data", contactInfo);
-});
+//   phoneBook = phoneBook.concat(contactInfo);
+//   response.json(contactInfo);
+//   console.log("returned data", contactInfo);
+// });
 
 // // ****************UPDATE******************
 // app.put("/api/persons/:id", (request, response) => {
