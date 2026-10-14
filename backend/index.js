@@ -46,21 +46,21 @@ app.get("/info", (request, response) => {
 });
 
 // *************DETAIL***************
-// app.get("/api/persons/:id", (request, response) => {
-//   const id = request.params.id;
-//   const person = phoneBook.find((n) => {
-//     return n.id === id;
-//   });
-//   return response.json(person);
-// });
+app.get("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const person = phoneBook.find((n) => {
+    return n.id === id;
+  });
+  return response.json(person);
+});
 
-// const lastId = () => {
-//   const maxId =
-//     phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
-//   return String(maxId + 1);
-// };
+const lastId = () => {
+  const maxId =
+    phoneBook.length > 0 ? Math.max(...phoneBook.map((n) => Number(n.id))) : 0;
+  return String(maxId + 1);
+};
 
-// // console.log("the last id is", lastId());
+// console.log("the last id is", lastId());
 
 // // ************CREATE************
 // app.post("/api/persons", (request, response) => {
