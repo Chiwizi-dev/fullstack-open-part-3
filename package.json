@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "the-phone-book",
   "private": true,
   "version": "0.0.0",
@@ -26,5 +27,10 @@
     "globals": "^17.11.0",
     "json-server": "^1.0.0-beta.15",
     "vite": "^8.2.2"
+=======
+  "dependencies": {
+    "axios": "^1.20.0",
+    "cors": "^2.8.6"
+>>>>>>> 43ae98f88fa6a0d41aee5e2c38b85a0a45e8c41e
   }
 }

@@ -1,0 +1,100 @@
+const express = require("express");
+const app = express();
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+// ==========================================
+// 1. THE MOCK DATABASE
+// ==========================================
+// Imagine this is MongoDB or PostgreSQL.
+// Notice how every user has a pre-assigned 'role' ('admin', 'editor', or 'user').
+const fakeDatabase = [
+  { id: 1, username: "Alice", role: "admin" },
+  { id: 2, username: "Bob", role: "editor" },
+  { id: 3, username: "Charlie", role: "user" }, // Regular user
+];
+
+// ==========================================
+// 2. AUTHENTICATION MIDDLEWARE (Who is logging in?)
+// ==========================================
+// This middleware simulates a user "logging in" by checking a custom header
+// (e.g., `x-user-id`). It finds the user in our mock database and attaches\
+// them to `req.user`.
+function identifyUser(req, res, next) {
+  // Let's pretend the client sends their user ID in the request headers
+  const userId = parseInt(req.headers["x-user-id"]);
+
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ error: "Please log in by providing an x-user-id header." });
+  }
+
+  // Look up the user in our mock database
+  const foundUser = fakeDatabase.find((u) => u.id === userId);
+
+  if (!foundUser) {
+    return res.status(404).json({ error: "User not found in database." });
+  }
+
+  // CREATE THE CUSTOM PROPERTY: Attach the user object to 'req.user'
+  // This is where req.user comes from!
+  req.user = foundUser;
+
+  next(); // Move to the next step
+}
+
+// ==========================================
+// 3. CONFIGURABLE ROLE CHECKER MIDDLEWARE (The Factory)
+// ==========================================
+// This is the factory function we talked about. It accepts a role requirement ('admin' or 'editor')
+// and returns a custom middleware function.
+function requireRole(requiredRole) {
+  return function (req, res, next) {
+    // Check if req.user exists (meaning authentication middleware ran first)
+    // and check if their role matches the requirement.
+    if (!req.user || req.user.role !== requiredRole) {
+      return res.status(403).json({
+        error: `Access denied! You are logged in as '${req.user ? req.user.role : "guest"}', but this route requires a '${requiredRole}' role.`,
+      });
+    }
+
+    next(); // Role matches, proceed to the route handler!
+  };
+}
+
+// ==========================================
+// 4. THE ROUTES & CONSUMPTION
+// ==========================================
+
+// Route A: Public-ish route, but requires you to at least be identified
+app.get("/dashboard", identifyUser, (req, res) => {
+  res.json({
+    message: `Welcome to your dashboard, ${req.user.username}!`,
+    yourAssignedRole: req.user.role,
+  });
+});
+
+// Route B: STRICTLY FOR ADMINS ONLY
+// Notice the chain: identifyUser runs first to fill 'req.user',
+// then requireRole('admin') checks if that user is an admin.
+app.delete("/users/:id", identifyUser, requireRole("admin"), (req, res) => {
+  const targetId = req.params.id;
+  res.json({
+    message: `Success! User ID ${targetId} was deleted by admin ${req.user.username}.`,
+  });
+});
+
+// Route C: STRICTLY FOR EDITORS ONLY
+app.post("/posts", identifyUser, requireRole("editor"), (req, res) => {
+  res.json({
+    message: `Success! New post created by editor ${req.user.username}.`,
+    postContent: req.body.title,
+  });
+});
+
+// Start server
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
